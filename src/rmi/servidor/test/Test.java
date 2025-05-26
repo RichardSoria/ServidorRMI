@@ -1,6 +1,5 @@
-package Test;
+package rmi.servidor.test;
 
-import rmi.servidor.clase.Servidor;
 import rmi.servidor.clase.ServidorImpl;
 
 import java.rmi.Naming;
