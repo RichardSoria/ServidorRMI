@@ -6,7 +6,27 @@ import java.util.ArrayList;
 
 
 public class ServidorImpl extends UnicastRemoteObject implements Servidor {
-    private static ArrayList<Persona> listaPersonas() {
+    public static String getPersonaDB(int id) {
+        return "Nombre: " + Consulta.getPersonas().get(id - 1).getNombre() + "\n"
+                + "Correo: " + Consulta.getPersonas().get(id - 1).getCorreo() + "\n"
+                + "Cargo: " + Consulta.getPersonas().get(id - 1).getCargo() + "\n"
+                + "Sueldo: " + Consulta.getPersonas().get(id - 1).getSueldo() + "\n";
+    }
+
+    public ServidorImpl() throws RemoteException {
+        super();
+    }
+
+    @Override
+    public String consultar(int id) {
+        if (id < Consulta.getPersonas().size() + 1) {
+            return getPersonaDB(id);
+        } else {
+            return "No existe la persona con el ID: " + id;
+        }
+    }
+}
+    /*private static ArrayList<Persona> listaPersonas() {
         ArrayList<Persona> lista = new ArrayList<Persona>();
         lista.add(new Persona(1, "Juan Pérez", "juan.perez@example.com", "Gerente", 3500.00));
         lista.add(new Persona(2, "Ana Torres", "ana.torres@example.com", "Asistente", 2000.00));
@@ -20,7 +40,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
         return lista;
     }
 
-    public static String getPesona(int id) {
+    public static String getPersona(int id) {
         return "Nombre: " + listaPersonas().get(id - 1).getNombre() + "\n"
                 + "Correo: " + listaPersonas().get(id - 1).getCorreo() + "\n"
                 + "Cargo: " + listaPersonas().get(id - 1).getCargo() + "\n"
@@ -34,9 +54,10 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
     @Override
     public String consultar(int id) throws Exception {
         if (id < listaPersonas().size() + 1) {
-            return getPesona(id);
+            return getPersona(id);
         } else {
             return "No existe el empleado con ID: " + id;
         }
-    }
-}
+    }*/
+
+

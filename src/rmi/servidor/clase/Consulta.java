@@ -1,20 +1,47 @@
 package rmi.servidor.clase;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class Consulta {
-    public static void main(String[] args) {
-        String url = "jdbc:sqlite:mi_base_de_datos.db"; // archivo en el directorio actual
 
-        try (Connection conn = DriverManager.getConnection(url)) {
-            if (conn != null) {
-                System.out.println("✔ Conexión establecida a SQLite");
+    public static ArrayList<Persona> getPersonas() {
+        ArrayList<Persona> lista = new ArrayList<>();
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Carga el driver
+            Class.forName("org.sqlite.JDBC");
+            // Conecta a la base de datos (empleados.db)
+            String ruta = "db/empleados.db";
+            conn = DriverManager.getConnection("jdbc:sqlite:" + ruta);
+            // Crea la consulta
+            String sql = "SELECT id, nombre, correo, cargo, sueldo FROM empleado";
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+
+            // Recorre resultados y crea objetos Persona
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                String correo = rs.getString("correo");
+                String cargo = rs.getString("cargo");
+                double sueldo = rs.getDouble("sueldo");
+
+                Persona p = new Persona(id, nombre, correo, cargo, sueldo);
+                lista.add(p);
             }
-        } catch (SQLException e) {
-            System.out.println("✘ Error de conexión: " + e.getMessage());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Cierra recursos
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+            try { if (conn != null) conn.close(); } catch (Exception e) {}
         }
+        return lista;
     }
 }
-

@@ -1,5 +1,7 @@
 package rmi.servidor.test;
 
+import rmi.servidor.clase.Consulta;
+import rmi.servidor.clase.Persona;
 import rmi.servidor.clase.ServidorImpl;
 
 import java.rmi.Naming;
