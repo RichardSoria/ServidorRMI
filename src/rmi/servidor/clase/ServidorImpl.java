@@ -4,14 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-
 public class ServidorImpl extends UnicastRemoteObject implements Servidor {
-    public static String getPersonaDB(int id) {
-        return "Nombre: " + Consulta.getPersonas().get(id - 1).getNombre() + "\n"
-                + "Correo: " + Consulta.getPersonas().get(id - 1).getCorreo() + "\n"
-                + "Cargo: " + Consulta.getPersonas().get(id - 1).getCargo() + "\n"
-                + "Sueldo: " + Consulta.getPersonas().get(id - 1).getSueldo() + "\n";
-    }
 
     public ServidorImpl() throws RemoteException {
         super();
@@ -19,45 +12,29 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
 
     @Override
     public String consultar(int id) {
-        if (id < Consulta.getPersonas().size() + 1) {
-            return getPersonaDB(id);
-        } else {
-            return "No existe la persona con el ID: " + id;
-        }
-    }
-}
-    /*private static ArrayList<Persona> listaPersonas() {
-        ArrayList<Persona> lista = new ArrayList<Persona>();
-        lista.add(new Persona(1, "Juan Pérez", "juan.perez@example.com", "Gerente", 3500.00));
-        lista.add(new Persona(2, "Ana Torres", "ana.torres@example.com", "Asistente", 2000.00));
-        lista.add(new Persona(3, "Luis Gómez", "luis.gomez@example.com", "Contador", 2800.00));
-        lista.add(new Persona(4, "María Reyes", "maria.reyes@example.com", "Recepcionista", 1800.00));
-        lista.add(new Persona(5, "Carlos León", "carlos.leon@example.com", "Ingeniero", 4000.00));
-        lista.add(new Persona(6, "Laura Vélez", "laura.velez@example.com", "Diseñadora", 2700.00));
-        lista.add(new Persona(7, "Pedro Ramírez", "pedro.ramirez@example.com", "Ventas", 3200.00));
-        lista.add(new Persona(8, "Sofía Acosta", "sofia.acosta@example.com", "Marketing", 3000.00));
-
-        return lista;
-    }
-
-    public static String getPersona(int id) {
-        return "Nombre: " + listaPersonas().get(id - 1).getNombre() + "\n"
-                + "Correo: " + listaPersonas().get(id - 1).getCorreo() + "\n"
-                + "Cargo: " + listaPersonas().get(id - 1).getCargo() + "\n"
-                + "Sueldo: " + listaPersonas().get(id - 1).getSueldo();
-    }
-
-    public ServidorImpl() throws RemoteException {
-        super();
+        Persona p = Consulta.buscarPorId(id);
+        return (p != null)
+                ? "Nombre: " + p.getNombre() + "\nCorreo: " + p.getCorreo() + "\nCargo: " + p.getCargo() + "\nSueldo: " + p.getSueldo()
+                : "No existe la persona con el ID: " + id;
     }
 
     @Override
-    public String consultar(int id) throws Exception {
-        if (id < listaPersonas().size() + 1) {
-            return getPersona(id);
-        } else {
-            return "No existe el empleado con ID: " + id;
-        }
-    }*/
+    public ArrayList<Persona> listar() {
+        return Consulta.getPersonas();
+    }
 
+    @Override
+    public boolean agregar(Persona persona) {
+        return Consulta.insertarPersona(persona);
+    }
 
+    @Override
+    public boolean actualizar(int id, Persona persona) {
+        return Consulta.actualizarPersona(id, persona);
+    }
+
+    @Override
+    public boolean eliminar(int id) {
+        return Consulta.eliminarPersona(id);
+    }
+}
